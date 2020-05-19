@@ -5,10 +5,15 @@
 @use 'reset';
 
 // Shared
-// @use 'shared/ActivityBar';
+@use 'shared/Menu';
 
 // Pages
 @use 'pages';
 @use 'pages/Level';
 @use 'pages/Home';
 @use 'pages/Page404';
+
+* {
+  box-sizing: border-box;
+  background-color: black;
+}

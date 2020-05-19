@@ -1,0 +1,26 @@
+@use '../../styles' as *;
+
+.menu {
+  @include mixins-viewArea;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+.menu, .menu-item, .menu-link {
+  background: none;
+}
+
+.menu-item {
+  text-align: center;
+  padding-top: 80px;
+}
+
+.menu-link {
+  color: white;
+  font-size: 26px;
+  text-decoration: none;
+  font-weight: bold;
+  text-transform: uppercase;
+}
