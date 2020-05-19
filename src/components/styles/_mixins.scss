@@ -1,0 +1,35 @@
+@mixin break-point ($point) {
+	@if $point == mobile {
+		@media (min-width: #{$min-mobile}) {
+				@content;
+		}
+	}
+
+	@if $point == tablet {
+		@media (min-width: #{$min-tablet}) {
+			@content;
+		}
+	}
+
+	@if $point == desktop {
+		@media (min-width: #{$min-desktop}) {
+			@content;
+		}
+	}
+}
+
+@mixin flex ($direction: row) {
+	.flex-#{$direction} {
+		display: flex;
+		flex-direction: $direction;
+		@if $direction == column {
+			height: 100%;
+		}
+		@if $direction == row {
+			width: 100%;
+		}
+	}
+}
+
+@include flex(row);
+@include flex(column);

@@ -1,0 +1,36 @@
+* {
+  box-sizing: border-box;
+  background-color: black;
+  margin: 0 auto;
+}
+
+#puzzle {
+  height: calc(100vw / (16/9));
+  width: calc(100vh * (16/9));
+  max-width: calc(100vw - 3px);
+  max-height: 100vh;
+  overflow: hidden;
+  border: 2px solid #444;
+  
+  .puzzle-row {
+    height: calc(100%/3);
+  }
+  
+  .puzzle-piece {
+    display: inline-block;
+    width: 25%;
+    height: 100%;
+    outline: 4px solid #000;
+    outline-offset: -2px;
+    background-size: cover;
+  }
+
+  .puzzle-position {
+    position: relative;
+    top: calc(50% - 20px);
+    left: calc(50% - 20px);
+    color: white;
+    background: none;
+    font-size: 40px;
+  }
+}
