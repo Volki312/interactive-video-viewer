@@ -1,13 +1,14 @@
 import React from 'react'
-import video from './video.mp4'
+import { Link } from 'react-router-dom'
 
 const Home = () => {
 	return (
 		<main>
-			<video className="video" controls autoPlay muted>
-				<source src={video} type="video/mp4" />
-				Your browser does not support the video tag.
-			</video> 
+			<br />
+			<Link className="links" to="/level/1">lvl 1</Link><br />
+			<Link className="links" to="/level/2">lvl 2</Link><br />
+			<Link className="links" to="/level/3">lvl 3</Link><br />
+			<Link className="links" to="/level/4">lvl 4</Link><br />
 		</main>
 	)
 }

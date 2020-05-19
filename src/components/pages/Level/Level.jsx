@@ -1,14 +1,17 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { shuffle, delay } from 'lodash'
+import { shuffle, delay, isEqual } from 'lodash'
+import { useEffect } from 'react'
+import Video from './Video.jsx'
 
 const Level = (props) => {
 	const board = [
-		[	0, 1, 2, 3 ],
-		[	0, 1, 2, 3 ],
-		[	0, 1, 2, 3 ],
+		[ 0, 1, 2, 3 ],
+		[ 0, 1, 2, 3 ],
+		[ 0, 1, 2, 3 ],
 	]
-	let freePositions = shuffle([ [0,0], [0,1], [0,2], [0,3], [1,0], [1,1], [1,2], [1,3], [2,0], [2,1], [2,2] ])
+	// let freePositions = shuffle([ [0,0], [0,1], [0,2], [0,3], [1,0], [1,1], [1,2], [1,3], [2,0], [2,1], [2,2] ])
+	let freePositions = [ [0,0], [0,1], [0,2], [0,3], [1,0], [1,1], [1,3], [2,2], [2,0], [2,1], [1,2] ]
 
 	const initLevel = board.map((arr, row) => arr.map((val, column) => {
 		if (row === 2 && column === 3) return { src: '', position: [row, column], correctPosition: [row, column]}
@@ -18,14 +21,15 @@ const Level = (props) => {
 
 	const [level, setLevel] = useState(initLevel)
 	const [emptyPosition, setEmptyPosition] = useState([2, 3])
-	const [inTransition, setInTransition] = useState(false)
+	const [isInTransition, setisInTransition] = useState(false)
+	const [isLevelFinished, setisLevelFinished] = useState(false)
 	
 	const movePiece = (e, pressedPosition) => {
 		const [x1, y1] = pressedPosition
 		const [x2, y2] = emptyPosition
 
-		if (!inTransition && ((x2 === x1 && Math.abs(y2 - y1) === 1) || (y2 === y1 && Math.abs(x2 - x1) === 1))) {
-			setInTransition(true)
+		if (!isInTransition && ((x2 === x1 && Math.abs(y2 - y1) === 1) || (y2 === y1 && Math.abs(x2 - x1) === 1))) {
+			setisInTransition(true)
 			let target = e.target
 
 			if (x2 > x1) target.style.transform='translate(0, 100%)'
@@ -45,16 +49,20 @@ const Level = (props) => {
 
 				setLevel(uL)
 				setEmptyPosition(pressedPosition)
-				setInTransition(false)
-			}, 600, [target])
+				setisInTransition(false)
+			}, 601, [target])
 
 		}
 		return
 	}
 
+	useEffect(() => {
+		if (level.flat().every(piece => isEqual(piece.position, piece.correctPosition))) setisLevelFinished(true)
+	}, [level, movePiece])
+
 	return (
 		<main id="puzzle">
-			{level.map((row, i) => {
+			{!isLevelFinished ? level.map((row, i) => {
 				return (
 					<div key={i} className="puzzle-row">						
 						{row.map((piece, i) => {
@@ -72,7 +80,9 @@ const Level = (props) => {
 						})}
 					</div>
 				)
-			})}
+			})
+				: <Video level={props.match.params.level}/>
+			}
 		</main>
 	)
 }

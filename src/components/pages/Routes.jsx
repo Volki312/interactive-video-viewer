@@ -8,8 +8,8 @@ import Home from './Home'
 function Routes () {
 	return (
 		<Switch>
-			<Route exact path="/Level/:level" component={Level} />
 			<Route exact path="/" component={Home} />
+			<Route exact path="/Level/:level" component={Level} />
 			<Route component={Page404} />
 		</Switch>
 	)
