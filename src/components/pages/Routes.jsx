@@ -9,6 +9,7 @@ function Routes () {
 	return (
 		<Switch>
 			<Route exact path="/" component={Home} />
+			<Route exact path="/Level/" component={Level} />
 			<Route exact path="/Level/:level" component={Level} />
 			<Route component={Page404} />
 		</Switch>

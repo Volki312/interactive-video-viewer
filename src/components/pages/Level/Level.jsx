@@ -5,25 +5,29 @@ import { useEffect } from 'react'
 import Video from './Video.jsx'
 
 const Level = (props) => {
-	const board = [
-		[ 0, 1, 2, 3 ],
-		[ 0, 1, 2, 3 ],
-		[ 0, 1, 2, 3 ],
-	]
-	// let freePositions = shuffle([ [0,0], [0,1], [0,2], [0,3], [1,0], [1,1], [1,2], [1,3], [2,0], [2,1], [2,2] ])
-	let freePositions = [ [0,0], [0,1], [0,2], [0,3], [1,0], [1,1], [1,3], [2,2], [2,0], [2,1], [1,2] ]
-
-	const initLevel = board.map((arr, row) => arr.map((val, column) => {
-		if (row === 2 && column === 3) return { src: '', position: [row, column], correctPosition: [row, column]}
-		const correctPosition = freePositions.shift()
-		return { src: require(`./assets/${props.match.params.level}/${correctPosition[0]},${correctPosition[1]}.jpg`), position: [row, column], correctPosition: correctPosition }
-	}))
-
-	const [level, setLevel] = useState(initLevel)
+	const [level, setLevel] = useState(parseInt(props.match.params.level) || 1)
+	const [board, setBoard] = useState([])
 	const [emptyPosition, setEmptyPosition] = useState([2, 3])
 	const [isInTransition, setisInTransition] = useState(false)
-	const [isLevelFinished, setisLevelFinished] = useState(false)
+	const [isLevelFinished, setIsLevelFinished] = useState(false)
 	
+	useEffect(() => {
+		const boardDimensions = [
+			[ 0, 1, 2, 3 ],
+			[ 0, 1, 2, 3 ],
+			[ 0, 1, 2, 3 ],
+		]
+		
+		let freePositions = shuffle([ [0,0], [0,1], [0,2], [0,3], [1,0], [1,1], [1,2], [1,3], [2,0], [2,1], [2,2] ])
+		// let freePositions = [ [0,0], [0,1], [0,2], [0,3], [1,0], [1,1], [1,3], [2,2], [2,0], [2,1], [1,2] ]
+		
+		setBoard(boardDimensions.map((arr, row) => arr.map((val, column) => {
+			if (row === 2 && column === 3) return { src: '', position: [row, column], correctPosition: [row, column]}
+			const correctPosition = freePositions.shift()
+			return { src: require(`./assets/${level}/${correctPosition[0]},${correctPosition[1]}.jpg`), position: [row, column], correctPosition: correctPosition }
+		})))
+	}, [level])
+
 	const movePiece = (e, pressedPosition) => {
 		const [x1, y1] = pressedPosition
 		const [x2, y2] = emptyPosition
@@ -42,12 +46,12 @@ const Level = (props) => {
 				target.style.transform = ''
 				target.style.transitionDuration = ''
 
-				// updatedLevel
-				let uL = level;
+				// updatedBoard
+				let uL = board;
 				[uL[x1][y1].src, uL[x2][y2].src] = [uL[x2][y2].src, uL[x1][y1].src];
 				[uL[x1][y1].correctPosition, uL[x2][y2].correctPosition] = [uL[x2][y2].correctPosition, uL[x1][y1].correctPosition]
 
-				setLevel(uL)
+				setBoard(uL)
 				setEmptyPosition(pressedPosition)
 				setisInTransition(false)
 			}, 601, [target])
@@ -57,12 +61,16 @@ const Level = (props) => {
 	}
 
 	useEffect(() => {
-		if (level.flat().every(piece => isEqual(piece.position, piece.correctPosition))) setisLevelFinished(true)
-	}, [level, movePiece])
+		if (board.flat().every(piece => isEqual(piece.position, piece.correctPosition))) setIsLevelFinished(true)
+	}, [board, movePiece])
+	// }, [movePiece])
+
+	//after setIsLevelFinished start playing video and show a menu with a button to go to next level -> setLevel
+	//on level change reset isLevelFinished to false
 
 	return (
 		<main id="puzzle">
-			{!isLevelFinished ? level.map((row, i) => {
+			{!isLevelFinished ? board.map((row, i) => {
 				return (
 					<div key={i} className="puzzle-row">						
 						{row.map((piece, i) => {
@@ -81,14 +89,14 @@ const Level = (props) => {
 					</div>
 				)
 			})
-				: <Video level={props.match.params.level}/>
+				: <Video level={level}/>
 			}
 		</main>
 	)
 }
 
 Level.propTypes = {
-	match: PropTypes.object.isRequired,
+	match: PropTypes.object,
 }
 
 export default Level

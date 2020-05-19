@@ -11,7 +11,7 @@ const Video = (props) => {
 }
 
 Video.propTypes = {
-	level: PropTypes.string.isRequired,
+	level: PropTypes.number.isRequired,
 }
 
 export default Video
