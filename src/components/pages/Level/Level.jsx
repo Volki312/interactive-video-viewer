@@ -11,6 +11,7 @@ const Level = (props) => {
 	const [emptyPosition, setEmptyPosition] = useState([2, 3])
 	const [isInTransition, setisInTransition] = useState(false)
 	const [isLevelFinished, setIsLevelFinished] = useState(false)
+	// const [isVideoPlaying, setIsVideoPlaying] = useState(false)
 
 	useEffect(() => {
 		const boardDimensions = [
@@ -62,19 +63,37 @@ const Level = (props) => {
 		return
 	}, [board, isInTransition, emptyPosition, isLevelFinished])
 
-	const arePiecesOnCorrectPosition = board.flat().every(piece => isEqual(piece.position, piece.correctPosition))
+	// const arePiecesOnCorrectPosition = board.flat().every(piece => isEqual(piece.position, piece.correctPosition))
+	// useEffect(() => {
+	// 	if (!isLevelFinished && arePiecesOnCorrectPosition) {
+	// 		setBoard(board.map(row => row.map(piece => ({...piece, src: ''}))))
+	// 		setIsLevelFinished(true)
+	// 	}
+	// }, [board, movePiece, isLevelFinished, arePiecesOnCorrectPosition])
+
 	useEffect(() => {
-		if (!isLevelFinished && arePiecesOnCorrectPosition) {
-			setBoard(board.map(row => row.map(piece => ({...piece, src: ''}))))
+		if (board.flat().every(piece => isEqual(piece.position, piece.correctPosition))) {
 			setIsLevelFinished(true)
+			// setTimeout(() => {
+			// 	setIsVideoPlaying(true)
+			// }, 5000)
 		}
-	}, [board, movePiece, isLevelFinished, arePiecesOnCorrectPosition])
+	}, [board, movePiece])
+
+	// je li nepotrebno vamo dodavati background img na puzzle i stavljati na puzzle-row i puzzle-piece background: transparent;???
+	// preload
+    // This enumerated attribute is intended to provide a hint to the browser about what the author thinks will lead to the best user experience with regards to what content is loaded before the video is played. It may have one of the following values:
+
+    //     none: Indicates that the video should not be preloaded.
+    //     metadata: Indicates that only video metadata (e.g. length) is fetched.
+    //     auto: Indicates that the whole video file can be downloaded, even if the user is not expected to use it.
+    //     empty string: Synonym of the auto value.
 
 	return (
-		<main id="puzzle">
+		<main id="puzzle" style={{ backgroundImage: `url(${require(`./assets/${level}/full.jpg`)})`, backgroundSize: 'cover' }}>
 			{board.map((row, i) => {
 				return (
-					<div key={i} className="puzzle-row">
+					<div key={i} className="puzzle-row" style={{backgroundColor: isLevelFinished ? 'transparent' : 'black'}}>
 						{row.map((piece, j) => {
 							return (
 								<div
@@ -82,7 +101,7 @@ const Level = (props) => {
 									onClick={(e) => movePiece(e, piece.position)}
 									className="puzzle-piece"
 									style={{
-										backgroundImage: `url(${piece.src})`,
+										backgroundImage: `url(${!isLevelFinished ? piece.src : ''})`,
 										backgroundColor: isLevelFinished && !isEqual(piece.correctPosition, emptyPosition) ? 'transparent' : 'black',
 										position: isLevelFinished ? 'relative' : 'initial',
 									}}
@@ -96,6 +115,7 @@ const Level = (props) => {
 				)})
 			}
 			{ isLevelFinished && <Video level={level}/> }
+			{/* { isVideoPlaying && <Video level={level}/> } */}
 			{ isLevelFinished && <Menu type={level !== '4' ? 'regular' : 'end'} nextLevel={parseInt(level)+1} />}
 		</main>
 	)
