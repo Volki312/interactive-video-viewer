@@ -1,18 +1,19 @@
-@mixin break-point ($point) {
+@use 'theme';
+@mixin breakPoint ($point) {
 	@if $point == mobile {
-		@media (min-width: #{$min-mobile}) {
+		@media (min-width: #{theme.$min-mobile}) {
 				@content;
 		}
 	}
 
 	@if $point == tablet {
-		@media (min-width: #{$min-tablet}) {
+		@media (min-width: #{theme.$min-tablet}) {
 			@content;
 		}
 	}
 
 	@if $point == desktop {
-		@media (min-width: #{$min-desktop}) {
+		@media (min-width: #{theme.$min-desktop}) {
 			@content;
 		}
 	}

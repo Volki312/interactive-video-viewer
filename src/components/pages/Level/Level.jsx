@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React, { useState, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { shuffle, delay, isEqual } from 'lodash'
@@ -5,31 +6,48 @@ import { useEffect } from 'react'
 import Video from './Video.jsx'
 import Menu from '../../shared/Menu'
 
+const initialState = (level, lastPiecePosition) => {
+	const boardDimensions = [
+		[ 0, 1, 2, 3 ],
+		[ 0, 1, 2, 3 ],
+		[ 0, 1, 2, 3 ],
+	]
+
+	// let freePositions = shuffle([ [0,0], [0,1], [0,2], [0,3], [1,0], [1,1], [1,2], [1,3], [2,0], [2,1], [2,2] ])
+	let freePositions = [ [0,0], [0,1], [0,2], [0,3], [1,0], [1,1], [1,3], [2,2], [2,0], [2,1], [1,2] ]
+	
+	return (
+		{
+			emptyPosition: lastPiecePosition,
+			isInTransition: false,
+			isLevelFinished: false,
+			isVideoPlaying: false,
+			board: boardDimensions.map((arr, row) => arr.map((val, column) => {
+				if (row === lastPiecePosition[0] && column === lastPiecePosition[1]) return { src: '', position: [row, column], correctPosition: [row, column]}
+				const correctPosition = freePositions.shift()
+				return { src: require(`./assets/${level}/${correctPosition[0]},${correctPosition[1]}.jpg`), position: [row, column], correctPosition: correctPosition }
+			})),
+		}
+	)
+}
+
 const Level = (props) => {
 	const level = props.match.params.level
-	const [board, setBoard] = useState([[{src: '', position: [0, 1], correctPosition: [1, 0]}]])
-	const [emptyPosition, setEmptyPosition] = useState([2, 3])
-	const [isInTransition, setisInTransition] = useState(false)
-	const [isLevelFinished, setIsLevelFinished] = useState(false)
-	// const [isVideoPlaying, setIsVideoPlaying] = useState(false)
+	const init = initialState('1', [2, 3])
+	const [board, setBoard] = useState(init.board)
+	const [emptyPosition, setEmptyPosition] = useState(init.emptyPosition)
+	const [isInTransition, setisInTransition] = useState(init.isInTransition)
+	const [isLevelFinished, setIsLevelFinished] = useState(init.isLevelFinished)
+	const [isVideoPlaying, setIsVideoPlaying] = useState(init.isVideoPlaying)
 
 	useEffect(() => {
-		const boardDimensions = [
-			[ 0, 1, 2, 3 ],
-			[ 0, 1, 2, 3 ],
-			[ 0, 1, 2, 3 ],
-		]
-
-		// let freePositions = shuffle([ [0,0], [0,1], [0,2], [0,3], [1,0], [1,1], [1,2], [1,3], [2,0], [2,1], [2,2] ])
-		let freePositions = [ [0,0], [0,1], [0,2], [0,3], [1,0], [1,1], [1,3], [2,2], [2,0], [2,1], [1,2] ]
-
-		setBoard(boardDimensions.map((arr, row) => arr.map((val, column) => {
-			if (row === 2 && column === 3) return { src: '', position: [row, column], correctPosition: [row, column]}
-			const correctPosition = freePositions.shift()
-			return { src: require(`./assets/${level}/${correctPosition[0]},${correctPosition[1]}.jpg`), position: [row, column], correctPosition: correctPosition }
-		})))
+		const newLevel = initialState(level, [2, 3])
+		setBoard(newLevel.board)
+		setEmptyPosition(newLevel.emptyPosition)
+		setisInTransition(newLevel.isInTransition)
+		setIsLevelFinished(newLevel.isLevelFinished)
+		setIsVideoPlaying(newLevel.isVideoPlaying)
 	}, [level])
-
 
 	const movePiece = useCallback((e, pressedPosition) => {
 		const [x1, y1] = pressedPosition
@@ -63,31 +81,21 @@ const Level = (props) => {
 		return
 	}, [board, isInTransition, emptyPosition, isLevelFinished])
 
-	// const arePiecesOnCorrectPosition = board.flat().every(piece => isEqual(piece.position, piece.correctPosition))
-	// useEffect(() => {
-	// 	if (!isLevelFinished && arePiecesOnCorrectPosition) {
-	// 		setBoard(board.map(row => row.map(piece => ({...piece, src: ''}))))
-	// 		setIsLevelFinished(true)
-	// 	}
-	// }, [board, movePiece, isLevelFinished, arePiecesOnCorrectPosition])
-
 	useEffect(() => {
 		if (board.flat().every(piece => isEqual(piece.position, piece.correctPosition))) {
 			setIsLevelFinished(true)
-			// setTimeout(() => {
-			// 	setIsVideoPlaying(true)
-			// }, 5000)
+			setIsVideoPlaying(true)
 		}
 	}, [board, movePiece])
 
 	// je li nepotrebno vamo dodavati background img na puzzle i stavljati na puzzle-row i puzzle-piece background: transparent;???
 	// preload
-    // This enumerated attribute is intended to provide a hint to the browser about what the author thinks will lead to the best user experience with regards to what content is loaded before the video is played. It may have one of the following values:
+	// This enumerated attribute is intended to provide a hint to the browser about what the author thinks will lead to the best user experience with regards to what content is loaded before the video is played. It may have one of the following values:
 
-    //     none: Indicates that the video should not be preloaded.
-    //     metadata: Indicates that only video metadata (e.g. length) is fetched.
-    //     auto: Indicates that the whole video file can be downloaded, even if the user is not expected to use it.
-    //     empty string: Synonym of the auto value.
+	//     none: Indicates that the video should not be preloaded.
+	//     metadata: Indicates that only video metadata (e.g. length) is fetched.
+	//     auto: Indicates that the whole video file can be downloaded, even if the user is not expected to use it.
+	//     empty string: Synonym of the auto value.
 
 	return (
 		<main id="puzzle" style={{ backgroundImage: `url(${require(`./assets/${level}/full.jpg`)})`, backgroundSize: 'cover' }}>
@@ -114,9 +122,8 @@ const Level = (props) => {
 					</div>
 				)})
 			}
-			{ isLevelFinished && <Video level={level}/> }
-			{/* { isVideoPlaying && <Video level={level}/> } */}
-			{ isLevelFinished && <Menu type={level !== '4' ? 'regular' : 'end'} nextLevel={parseInt(level)+1} />}
+			{ isLevelFinished && <Video level={level} onEnded={() => setIsVideoPlaying(false)} /> }
+			{ isLevelFinished && !isVideoPlaying && <Menu type={level !== '4' ? 'regular' : 'end'} nextLevel={parseInt(level)+1} replayVideo={() => setIsVideoPlaying(true)}/>}
 		</main>
 	)
 }

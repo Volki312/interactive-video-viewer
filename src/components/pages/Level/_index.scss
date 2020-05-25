@@ -6,13 +6,13 @@
   .puzzle-row {
     height: calc(100%/3);
   }
-  
+
   .puzzle-piece {
     display: inline-block;
     width: 25%;
     height: 100%;
-    outline: 4px solid black;
-    outline-offset: -2px;
+    outline: 2px solid black;
+    outline-offset: -1px;
     background-size: cover;
     z-index: 1;
     position: relative;
@@ -34,4 +34,13 @@
   top: 0;
   left: 0;
   z-index: 0;
+}
+
+@include mixins-breakPoint(desktop) {
+  #puzzle {
+    .puzzle-piece {
+      outline: 4px solid black;
+      outline-offset: -2px;
+    }
+  }
 }

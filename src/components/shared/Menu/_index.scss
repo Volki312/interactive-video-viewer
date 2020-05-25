@@ -14,7 +14,11 @@
 
 .menu-item {
   text-align: center;
-  padding-top: 80px;
+  line-height: 100px;
+
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 .menu-link {
