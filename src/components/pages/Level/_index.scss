@@ -2,7 +2,13 @@
 
 #puzzle {
   @include mixins-viewArea;
+  animation: fadein 2s; 
   
+  @keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
   .puzzle-row {
     height: calc(100%/3);
   }

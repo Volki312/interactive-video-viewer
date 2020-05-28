@@ -33,7 +33,7 @@ const initialState = (level, lastPiecePosition) => {
 
 const Level = (props) => {
 	const level = props.match.params.level
-	const init = initialState('1', [2, 3])
+	const init = initialState(level, [2, 3])
 	const [board, setBoard] = useState(init.board)
 	const [emptyPosition, setEmptyPosition] = useState(init.emptyPosition)
 	const [isInTransition, setisInTransition] = useState(init.isInTransition)
@@ -123,7 +123,7 @@ const Level = (props) => {
 				)})
 			}
 			{ isLevelFinished && <Video level={level} onEnded={() => setIsVideoPlaying(false)} /> }
-			{ isLevelFinished && !isVideoPlaying && <Menu type={level !== '4' ? 'regular' : 'end'} nextLevel={parseInt(level)+1} replayVideo={() => setIsVideoPlaying(true)}/>}
+			{ isLevelFinished && !isVideoPlaying && <Menu type={level < '4' ? 'regular' : 'end'} resetLevel={() => setIsLevelFinished(false)} nextLevel={parseInt(level)+1} replayVideo={() => setIsVideoPlaying(true)} />}
 		</main>
 	)
 }
