@@ -13,15 +13,16 @@ const initialState = (level, lastPiecePosition) => {
 		[ 0, 1, 2, 3 ],
 	]
 
-	// let freePositions = shuffle([ [0,0], [0,1], [0,2], [0,3], [1,0], [1,1], [1,2], [1,3], [2,0], [2,1], [2,2] ])
-	let freePositions = [ [0,0], [0,1], [0,2], [0,3], [1,0], [1,1], [1,3], [2,2], [2,0], [2,1], [1,2] ]
-	
+	let freePositions = shuffle([ [0,0], [0,1], [0,2], [0,3], [1,0], [1,1], [1,2], [1,3], [2,0], [2,1], [2,2] ])
+	// let freePositions = [ [0,0], [0,1], [0,2], [0,3], [1,0], [1,1], [1,3], [2,2], [2,0], [2,1], [1,2] ]
+
 	return (
 		{
 			emptyPosition: lastPiecePosition,
 			isInTransition: false,
 			isLevelFinished: false,
 			isVideoPlaying: false,
+			showHints: false,
 			board: boardDimensions.map((arr, row) => arr.map((val, column) => {
 				if (row === lastPiecePosition[0] && column === lastPiecePosition[1]) return { src: '', position: [row, column], correctPosition: [row, column]}
 				const correctPosition = freePositions.shift()
@@ -39,14 +40,16 @@ const Level = (props) => {
 	const [isInTransition, setisInTransition] = useState(init.isInTransition)
 	const [isLevelFinished, setIsLevelFinished] = useState(init.isLevelFinished)
 	const [isVideoPlaying, setIsVideoPlaying] = useState(init.isVideoPlaying)
+	const [showHints, setShowHints] = useState(init.showHints)
 
 	useEffect(() => {
 		const newLevel = initialState(level, [2, 3])
 		setBoard(newLevel.board)
+		setIsLevelFinished(newLevel.isLevelFinished)
 		setEmptyPosition(newLevel.emptyPosition)
 		setisInTransition(newLevel.isInTransition)
-		setIsLevelFinished(newLevel.isLevelFinished)
 		setIsVideoPlaying(newLevel.isVideoPlaying)
+		setShowHints(newLevel.showHints)
 	}, [level])
 
 	const movePiece = useCallback((e, pressedPosition) => {
@@ -62,7 +65,6 @@ const Level = (props) => {
 			if (y2 > y1) target.style.transform='translate(100%, 0)'
 			if (y2 < y1) target.style.transform='translate(-100%, 0)'
 			target.style.transitionDuration='0.6s'
-
 			delay(() => {
 				target.style.transform = ''
 				target.style.transitionDuration = ''
@@ -76,7 +78,6 @@ const Level = (props) => {
 				setEmptyPosition(pressedPosition)
 				setisInTransition(false)
 			}, 600, [target])
-
 		}
 		return
 	}, [board, isInTransition, emptyPosition, isLevelFinished])
@@ -88,17 +89,12 @@ const Level = (props) => {
 		}
 	}, [board, movePiece])
 
-	// je li nepotrebno vamo dodavati background img na puzzle i stavljati na puzzle-row i puzzle-piece background: transparent;???
-	// preload
-	// This enumerated attribute is intended to provide a hint to the browser about what the author thinks will lead to the best user experience with regards to what content is loaded before the video is played. It may have one of the following values:
-
-	//     none: Indicates that the video should not be preloaded.
-	//     metadata: Indicates that only video metadata (e.g. length) is fetched.
-	//     auto: Indicates that the whole video file can be downloaded, even if the user is not expected to use it.
-	//     empty string: Synonym of the auto value.
-
 	return (
 		<main id="puzzle" style={{ backgroundImage: `url(${require(`./assets/${level}/full.jpg`)})`, backgroundSize: 'cover' }}>
+			{ !isLevelFinished && <button id="help" onClick={() => setShowHints(!showHints)}>
+				<img className="help--image" src="https://img.icons8.com/fluent/48/000000/help.png"/>
+			</button>
+			}
 			{board.map((row, i) => {
 				return (
 					<div key={i} className="puzzle-row" style={{backgroundColor: isLevelFinished ? 'transparent' : 'black'}}>
@@ -115,7 +111,7 @@ const Level = (props) => {
 									}}
 									alt="Puzzle piece"
 								>
-									{/* <span className="puzzle-position" >{piece.correctPosition}</span> */}
+									{showHints && <span className="puzzle-position" >{piece.correctPosition[0]+1},{piece.correctPosition[1]+1}</span>}
 								</div>
 							)
 						})}
@@ -123,7 +119,7 @@ const Level = (props) => {
 				)})
 			}
 			{ isLevelFinished && <Video level={level} onEnded={() => setIsVideoPlaying(false)} /> }
-			{ isLevelFinished && !isVideoPlaying && <Menu type={level < '4' ? 'regular' : 'end'} resetLevel={() => setIsLevelFinished(false)} nextLevel={parseInt(level)+1} replayVideo={() => setIsVideoPlaying(true)} />}
+			{ isLevelFinished && !isVideoPlaying && <Menu type={level < '4' ? 'regular' : 'end'} nextLevel={parseInt(level)+1} replayVideo={() => setIsVideoPlaying(true)} />}
 		</main>
 	)
 }

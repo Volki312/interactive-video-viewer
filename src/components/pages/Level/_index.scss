@@ -2,11 +2,25 @@
 
 #puzzle {
   @include mixins-viewArea;
-  animation: fadein 2s; 
-  
+  animation: fadein 2s;
+
   @keyframes fadein {
     from { opacity: 0; }
     to   { opacity: 1; }
+  }
+
+  #help {
+    color: white;
+    position: absolute;
+    left: 0;
+    top: 7px;
+
+    .help--image {
+      background: none;
+      width: 20px;
+      border: 1px solid #aaa;
+      border-radius: 90px;
+    }
   }
 
   .puzzle-row {
@@ -42,11 +56,26 @@
   z-index: 0;
 }
 
-@include mixins-breakPoint(desktop) {
+@include mixins-breakPoint(tablet) {
   #puzzle {
     .puzzle-piece {
       outline: 4px solid black;
       outline-offset: -2px;
     }
+
+    #help {
+    color: white;
+    position: absolute;
+    left: 5px;
+    top: 10px;
+
+    .help--image {
+      background: none;
+      width: 25px;
+      border: 1px solid #aaa;
+      border-radius: 90px;
+    }
   }
+  }
+
 }
