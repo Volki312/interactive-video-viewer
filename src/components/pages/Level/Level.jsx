@@ -84,6 +84,7 @@ const Level = (props) => {
 
 	useEffect(() => {
 		if (board.flat().every(piece => isEqual(piece.position, piece.correctPosition))) {
+			setShowHints(false)
 			setIsLevelFinished(true)
 			setIsVideoPlaying(true)
 		}
@@ -91,8 +92,14 @@ const Level = (props) => {
 
 	return (
 		<main id="puzzle" style={{ backgroundImage: `url(${require(`./assets/${level}/full.jpg`)})`, backgroundSize: 'cover' }}>
-			{ !isLevelFinished && <button id="help" onClick={() => setShowHints(!showHints)}>
-				<img className="help--image" src="https://img.icons8.com/fluent/48/000000/help.png"/>
+			{ !isLevelFinished &&
+			<button id="help" onClick={() => setShowHints(!showHints)}>
+				{<img 
+					alt={!showHints ? 'Show hints' : 'Hide hints'}
+					title={!showHints ? 'Show hints' : 'Hide hints'}
+					className="help--image"
+					src={!showHints ? 'https://img.icons8.com/fluent/48/000000/help.png' : 'https://img.icons8.com/cotton/64/000000/cancel--v2.png'}
+				/>}
 			</button>
 			}
 			{board.map((row, i) => {
@@ -105,7 +112,8 @@ const Level = (props) => {
 									onClick={(e) => movePiece(e, piece.position)}
 									className="puzzle-piece"
 									style={{
-										backgroundImage: `url(${!isLevelFinished ? piece.src : ''})`,
+										// backgroundImage: `url(${!isLevelFinished ? piece.src : ''})`,
+										backgroundImage: !isLevelFinished ? `url(${piece.src})` : none,
 										backgroundColor: isLevelFinished && !isEqual(piece.correctPosition, emptyPosition) ? 'transparent' : 'black',
 										position: isLevelFinished ? 'relative' : 'initial',
 									}}

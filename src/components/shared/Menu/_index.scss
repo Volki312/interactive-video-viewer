@@ -17,9 +17,6 @@
   width: max-content;
   margin: 10vh auto 0 auto;
   animation: fadein 2s;
-  border: 2px solid gray;
-  border-radius: 24px;
-  background: #fff6e538;
 }
 
 @keyframes fadein {
@@ -32,7 +29,8 @@
   padding: 25px;
   margin: 20px;
   background: rgba(74, 72, 70, 0.85);
-  border-radius: 22px;
+  border: 2px solid gray;
+  border-radius: 24px;
 
   &:hover {
     cursor: pointer;
