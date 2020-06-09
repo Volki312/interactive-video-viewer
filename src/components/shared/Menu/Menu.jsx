@@ -14,7 +14,7 @@ const Menu = ({replayVideo, type, nextLevel}) => {
 		<div className="menu">
 			<ul className="menu-list">
 				{type === 'start' && <li className="menu-item"><Link className="menu-link" to="/level/1">Solve the puzzle</Link></li>}
-				{type === 'end' && <li className="menu-item"><Link className="menu-link" to="/level/1">Play again</Link></li>}
+				{type === 'end' && <li className="menu-item"><Link className="menu-link" to="/">Play again</Link></li>}
 				{type === 'regular' && <li className="menu-item"><Link className="menu-link" to={`/level/${nextLevel}`}>Go to the next level</Link></li>}
 				{type !== 'start' && <li className="menu-item" onClick={replay}><span className="menu-link">Replay video</span></li>}
 			</ul>
