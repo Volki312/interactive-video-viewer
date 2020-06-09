@@ -3,6 +3,7 @@
 #puzzle {
   @include mixins-viewArea;
   animation: fadein 2s;
+  // margin: 0 auto;
 
   @keyframes fadein {
     from { opacity: 0; }

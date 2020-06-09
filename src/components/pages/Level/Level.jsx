@@ -113,7 +113,7 @@ const Level = (props) => {
 									className="puzzle-piece"
 									style={{
 										// backgroundImage: `url(${!isLevelFinished ? piece.src : ''})`,
-										backgroundImage: !isLevelFinished ? `url(${piece.src})` : none,
+										backgroundImage: !isLevelFinished ? `url(${piece.src})` : 'none',
 										backgroundColor: isLevelFinished && !isEqual(piece.correctPosition, emptyPosition) ? 'transparent' : 'black',
 										position: isLevelFinished ? 'relative' : 'initial',
 									}}

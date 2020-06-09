@@ -22,7 +22,7 @@ const Video = ({onEnded, level}) => {
 			poster={require(`./assets/${level}/full.jpg`)}
 		>
 			<source src={require(`./assets/${level}/video.webm`)} type="video/webm" />
-			<source src={require(`./assets/${level}/video.mp4`)} type="video/mp4" />
+			{/* <source src={require(`./assets/${level}/video.mp4`)} type="video/mp4" /> */}
 			Your browser does not support the video tag.
 		</video>
 	)
