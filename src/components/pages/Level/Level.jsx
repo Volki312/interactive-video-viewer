@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 import React, { useState, useCallback } from 'react'
 import PropTypes from 'prop-types'
-import { delay, isEqual } from 'lodash'
+import { shuffle, delay, isEqual } from 'lodash'
 import { useEffect } from 'react'
 import Video from './Video.jsx'
 import Menu from '../../shared/Menu'
@@ -13,10 +13,12 @@ const initialState = (level, lastPiecePosition) => {
 		[ 0, 1, 2, 3 ],
 	]
 
-	// let freePositions = shuffle([ [0,0], [0,1], [0,2], [0,3], [1,0], [1,1], [1,2], [1,3], [2,0], [2,1], [2,2] ])
-	let freePositions = Math.random() > 0.35 ?
-		[ [0,0], [0,1], [1,2], [0,2], [1,0], [1,1], [2,2], [0,3], [2,0], [2,1], [1,3] ] :
-		[ [0,0], [0,1], [0,2], [0,3], [1,0], [1,1], [1,3], [2,2], [2,0], [2,1], [1,2] ]
+	let freePositions = [
+		[ [0,0], [0,1], [0,2], [0,3], [1,0], [1,1], [1,3], [2,2], [2,0], [2,1], [1,2] ],
+		[ [0,0], [0,1], [1,2], [0,2], [1,0], [1,1], [2,2], [0,3], [2,0], [2,1], [1,3] ],
+		[ [0,0], [1,1], [0,1], [0,2], [1,0], [1,2], [2,2], [0,3], [2,0], [2,1], [1,3] ],
+		shuffle([ [0,0], [0,1], [0,2], [0,3], [1,0], [1,1], [1,2], [1,3], [2,0], [2,1], [2,2] ])
+	]
 
 	return (
 		{
@@ -27,7 +29,7 @@ const initialState = (level, lastPiecePosition) => {
 			showHints: false,
 			board: boardDimensions.map((arr, row) => arr.map((val, column) => {
 				if (row === lastPiecePosition[0] && column === lastPiecePosition[1]) return { src: '', position: [row, column], correctPosition: [row, column]}
-				const correctPosition = freePositions.shift()
+				const correctPosition = freePositions[level-1].shift()
 				return { src: require(`./assets/${level}/${correctPosition[0]},${correctPosition[1]}.jpg`), position: [row, column], correctPosition: correctPosition }
 			})),
 		}
