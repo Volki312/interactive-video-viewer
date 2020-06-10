@@ -9,7 +9,7 @@
   width: 100%;
 }
 
-.menu, .menu-item, .menu-link {
+.menu, .menu-item, .menu-link, .menu-text {
   background: none;
 }
 
@@ -50,4 +50,9 @@
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 1px;
+}
+
+.menu-text {
+  color: white;
+  font-size: 22px;
 }
